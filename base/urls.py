@@ -9,14 +9,10 @@ def home(request):
     return HttpResponse("Welcome to the Home Page")
 
 urlpatterns = [
-    # path('animals/', views.animals_list, name='animals-list'),
-    # path('animals/<int:pk>/', views.animal_detail, name='animal-detail'),
-    # path('clients/', views.clients_list, name='clients-list'),
-    # path('clients/<int:pk>/', views.client_detail, name='client-detail'),
+    
     path('', home, name='home'),  # Маршрут для главной страницы
-    # path('students/', views.students_list, name='students-list'),
-    # path('students/<int:pk>/', views.students_detail, name='student-detail'),
- # URL для списка животных и создания нового животного
+   
+    # URL для списка животных и создания нового животного
     path('animals/', views.animals_list, name='animals-list'),
 
     # URL для получения информации о животном

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.6.7/dist/axios.min.js"></script>
+</head>
+
+<body>
+    <h1>CRUD animals</h1>
+
+    <!-- Форма для создания/обновления животного -->
+    <form id="animalForm">
+        <input type="hidden" id="animalId">
+        <label for="category">Category:</label>
+        <input type="text" id="category" name="category">
+        <br>
+        <label for="desc">Description:</label>
+        <input type="text" id="desc" name="desc">
+        <br>
+        <label for="price">Price:</label>
+        <input type="text" id="price" name="price">
+        <br>
+        <button type="submit"><i class="el el-address-book">ADD</i></button>
+    </form>
+
+    <!-- Таблица для отображения животных -->
+    <h2>Animals</h2>
+    <table id="animalsTable" border="1">
+        <thead>
+            <tr>
+                <th>Category</th>
+                <th>Description</th>
+                <th>Price</th>
+                <th>--</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <script>
+        const SERVER = "http://127.0.0.1:8000/animals/";
+
+        // Загрузка списка животных при загрузке страницы
+        document.addEventListener("DOMContentLoaded", function () {
+            loadAnimals();
+        });
+
+        // Загрузка списка животных
+        function loadAnimals() {
+            axios.get(SERVER).then(res => {
+                const animals = res.data;
+                const tableBody = document.querySelector("#animalsTable tbody");
+                tableBody.innerHTML = ''; // Очищаем таблицу
+                animals.forEach(animal => {
+                    tableBody.innerHTML += `
+                        <tr>
+                            <td>${animal.category}</td>
+                            <td>${animal.desc}</td>
+                            <td>${animal.price}</td>
+                            <td>
+                                <button onclick="editAnimal(${animal.id})">Update</button>
+                                <button onclick="deleteAnimal(${animal.id})">Delete</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            });
+        }
+
+        // Создание или обновление животного
+        document.querySelector("#animalForm").addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            const animalId = document.querySelector("#animalId").value;
+            const category = document.querySelector("#category").value;
+            const desc = document.querySelector("#desc").value;
+            const price = document.querySelector("#price").value;
+
+            const animalData = { category, desc, price };
+
+            if (animalId) {
+                // Если ID животного существует, обновляем его
+                axios.put(`${SERVER}${animalId}/update/`, animalData)
+                    .then(() => {
+                        alert("Животное обновлено!");
+                        loadAnimals();
+                        resetForm();
+                    });
+            } else {
+                // Если ID нет, создаем новое животное
+                axios.post(SERVER, animalData)
+                    .then(() => {
+                        alert("Животное создано!");
+                        loadAnimals();
+                        resetForm();
+                    });
+            }
+        });
+
+        // Редактирование животного
+        function editAnimal(id) {
+            axios.get(`${SERVER}${id}/`)
+                .then(res => {
+                    const animal = res.data;
+                    document.querySelector("#animalId").value = animal.id;
+                    document.querySelector("#category").value = animal.category;
+                    document.querySelector("#desc").value = animal.desc;
+                    document.querySelector("#price").value = animal.price;
+                });
+        }
+
+        // Удаление животного
+        function deleteAnimal(id) {
+            if (confirm("Вы уверены, что хотите удалить это животное?")) {
+                axios.delete(`${SERVER}${id}/delete/`)
+                    .then(() => {
+                        alert("Животное удалено!");
+                        loadAnimals();
+                    });
+            }
+        }
+
+        // Сброс формы
+        function resetForm() {
+            document.querySelector("#animalId").value = '';
+            document.querySelector("#category").value = '';
+            document.querySelector("#desc").value = '';
+            document.querySelector("#price").value = '';
+        }
+    </script>
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+    const SERVER2 = "http://127.0.0.1:8000/clients/";
+     axios(SERVER2).then(res => console.log(res.data))
+
+</script>
+
+<script>
+    const SERVER3 = "http://127.0.0.1:8000/students/";
+     axios(SERVER3).then(res => console.log(res.data))
+
+</script> 
+
+</body>
+
+</html>
