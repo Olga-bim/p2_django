@@ -31,3 +31,4 @@
         </script>
 
 7. Сделали CRUD для frontend
+8. Authentication
